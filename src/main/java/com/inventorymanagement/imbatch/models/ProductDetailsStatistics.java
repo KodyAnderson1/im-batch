@@ -29,8 +29,8 @@ public class ProductDetailsStatistics {
   private Map<String, List<Notification>> existingNotifications;
   private List<ProductDetails> productDetails;
 
-  private static boolean doesNotHaveNotification(Map<String, List<Notification>> notifications, NotificationType type, String userId) {
-    return !notifications.containsKey(userId) || notifications.get(userId).stream().noneMatch(item -> item.getNotificationType() == type);
+  private static boolean doesNotHaveNotification(Map<String, List<Notification>> notifications, NotificationType type, String userId, int productId) {
+    return !notifications.containsKey(userId) || notifications.get(userId).stream().noneMatch(item -> item.getNotificationType() == type && item.getProductId() == productId);
   }
 
   private static boolean doesNotHaveSLProduct(Map<String, List<ShoppingListProduct>> shoppingListProducts, int productId, String userId) {
@@ -64,7 +64,7 @@ public class ProductDetailsStatistics {
 
     if (product.getCurrentQuantity() == 0) {
 
-      if (doesNotHaveNotification(existingNotifications, NotificationType.OUT_OF_STOCK, userId)) {
+      if (doesNotHaveNotification(existingNotifications, NotificationType.OUT_OF_STOCK, userId, product.getId())) {
         notificationsToSave.add(Notification.of(product.getId(), userId, Constants.OUT_OF_STOCK_MESSAGE(product.getName()), NotificationType.OUT_OF_STOCK));
       }
 
@@ -74,7 +74,7 @@ public class ProductDetailsStatistics {
 
     } else if (product.getCurrentQuantity() <= product.getLowStockThreshold()) {
 
-      if (doesNotHaveNotification(existingNotifications, NotificationType.EXPIRATION, userId)) {
+      if (doesNotHaveNotification(existingNotifications, NotificationType.EXPIRATION, userId, product.getId())) {
         notificationsToSave.add(Notification.of(product.getId(), userId, Constants.LOW_STOCK_MESSAGE(product.getName()), NotificationType.LOW_STOCK));
       }
 
@@ -95,7 +95,7 @@ public class ProductDetailsStatistics {
     LocalDate expirationDate = product.getExpirationDate();
     if (Utilities.dateNotNullAndExpired(expirationDate)) {
 
-      if (doesNotHaveNotification(existingNotifications, NotificationType.EXPIRATION, userId)) {
+      if (doesNotHaveNotification(existingNotifications, NotificationType.EXPIRATION, userId, product.getId())) {
         notificationsToSave.add(Notification.of(product.getId(), userId, Constants.EXPIRED_MESSAGE(product.getName()), NotificationType.EXPIRATION));
       }
 
@@ -106,7 +106,7 @@ public class ProductDetailsStatistics {
     } else if (Utilities.dateNotNullAndExpiring(expirationDate, product.getExpirationNoticeDays())) {
       int daysUntilExpiration = Utilities.daysUntilDate(expirationDate);
 
-      if (doesNotHaveNotification(existingNotifications, NotificationType.EXPIRATION, userId)) {
+      if (doesNotHaveNotification(existingNotifications, NotificationType.EXPIRATION, userId, product.getId())) {
         notificationsToSave.add(Notification.of(product.getId(), userId, Constants.EXPIRATION_NOTICE_MESSAGE(product.getName(), daysUntilExpiration), NotificationType.EXPIRATION));
       }
 

@@ -50,9 +50,7 @@ public class DatabaseMapper {
     return (rs, rowNum) -> Notification.builder()
             .id(rs.getInt("id"))
             .userId(rs.getString("user_id"))
-            .notificationMessage(rs.getString("message"))
-            .notificationType(NotificationType.fromString(rs.getString("type")))
-            .notificationStatus(NotificationStatus.fromString(rs.getString("status")))
+            .notificationType(NotificationType.fromString(rs.getString("notification_type")))
             .createdAt(rs.getString("created_at"))
             .build();
   }

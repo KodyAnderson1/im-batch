@@ -75,6 +75,8 @@ public class BatchProcessEventListener {
       return;
     }
 
+    printColored(productDetails.size() + " items to process", ConsoleFormatter.Color.CYAN);
+
     List<ProductDetails> productsToSave = productDetails.stream().map(item -> {
       double oldQuantity = item.getCurrentQuantity();
       double newQuantity = getNewQuantity(item.getAction(), item.getCurrentQuantity(), item.getQuantityToChange());
