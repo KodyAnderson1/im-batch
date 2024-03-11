@@ -31,7 +31,7 @@ public class ProductDetails {
   private LocalDate nextRun;
   private LocalDate lastRun;
 
-  public static ProductDetails of(ProductDetails details, double currQuantity, LocalDate nextRun, LocalDate lastRun, double oldQuantity) {
+  public static ProductDetails of(ProductDetails details, double currQuantity, LocalDate nextRun, LocalDate lastRun) {
     return ProductDetails.builder()
             .id(details.getId())
             .schedulerId(details.getSchedulerId())
@@ -51,7 +51,7 @@ public class ProductDetails {
             .nextRun(nextRun)
             .lastRun(lastRun)
 
-            .oldQuantity(oldQuantity)
+            .oldQuantity(details.getCurrentQuantity())
             .build();
   }
 }

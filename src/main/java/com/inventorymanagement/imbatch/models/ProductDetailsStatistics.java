@@ -39,11 +39,14 @@ public class ProductDetailsStatistics {
 
   public ProductDetailsStatistics execute() {
     for (String userId : productDetailsByUser.keySet()) {
+
       if (!productTasks.containsKey(userId)) {
         continue;
       }
+
       List<ProductDetails> userProducts = productDetailsByUser.get(userId);
       List<ProductTask> userProductTasks = productTasks.get(userId);
+
       for (ProductTask task : userProductTasks) {
         switch (task.getTask()) {
           case EXPIRATION -> checkProductExpirations(userProducts, task, userId);
@@ -51,7 +54,9 @@ public class ProductDetailsStatistics {
           case CUSTOM -> log.error("Custom task not implemented");
         }
       }
+
     }
+
     return this;
   }
 
